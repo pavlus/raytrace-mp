@@ -13,12 +13,12 @@ object VectorMathFallback : IVectorMath {
 
 
     override fun plus(self: FV3, offset: Number): FV3 {
-        val value = offset.toFloat()
+        val value = offset.toDouble()
         return FV3(self.x + value, self.y + value, self.z + value)
     }
 
     override fun minus(self: FV3, offset: Number): FV3 {
-        val value = offset.toFloat()
+        val value = offset.toDouble()
         return FV3(self.x - value, self.y - value, self.z - value)
     }
 
@@ -29,7 +29,7 @@ object VectorMathFallback : IVectorMath {
         FV3(self.x * other.x, self.y * other.y, self.z * other.z)
 
     override fun times(self: FV3, scale: Number): FV3 {
-        val factor = scale.toFloat()
+        val factor = scale.toDouble()
         return FV3(self.x * factor, self.y * factor, self.z * factor)
     }
 
@@ -56,5 +56,5 @@ object VectorMathFallback : IVectorMath {
     }
 
     override fun pow(fl: Double, n: Number): Double = fl.pow(n.toDouble())
-    override fun div(number: Number, other: Double): Double = number.toFloat().div(other)
+    override fun div(number: Number, other: Double): Double = number.toDouble().div(other)
 }

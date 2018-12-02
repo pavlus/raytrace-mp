@@ -11,7 +11,7 @@ typealias Tracer = (Camera, Double, Double, Hittable) -> Color
 
 private val BLACK = Color(0, 0, 0)
 private fun toColor(ray: Ray, stage: Hittable): Color {
-    val hit = stage.getHit(ray, 0.01, Float.MAX_VALUE)
+    val hit = stage.getHit(ray, 0.01, Double.MAX_VALUE)
     return hit?.let {
         if (ray.ttl < 0) return BLACK
         val scattered = it.material.scatter(ray, it) ?: return BLACK

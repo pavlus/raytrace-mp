@@ -7,7 +7,7 @@ data class Color(val r: Double, val g: Double, val b: Double) {
 }
 inline operator fun Color.times(other: Color) = Color(r * other.r, g * other.g, b * other.b)
 inline operator fun Color.times(other: Number): Color {
-    val f = other.toFloat()
+    val f = other.toDouble()
     return Color(r * f, g * f, b * f)
 }
 

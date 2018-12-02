@@ -48,8 +48,8 @@ open class Sphere(val center: Point, val radius: Number, val material: Material)
     }
 
     protected fun Number.inRange(min: Number, max: Number): Boolean {
-        val f = toFloat();
-        return f > min.toFloat() && f < max.toFloat()
+        val f = toDouble();
+        return f > min.toDouble() && f < max.toDouble()
     }
 
     override fun toString(): String {
