@@ -1,0 +1,47 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.10'
+}
+apply plugin: "application"
+
+group 'com.pavlus.raytrace'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'com.pavlus.raytrace:common-lib:0.1'
+    implementation 'com.pavlus.raytrace:common-lib-jvm:0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.10"
+    implementation "no.tornado:tornadofx:1.7.17"
+
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+
+
+mainClassName = "com.example.demo.app.MyApp"
+
+jar {
+    manifest {
+        attributes(
+                "Class-Path": configurations.compile.collect { it.getName() }.join(" "),
+                "Main-Class": mainClassName
+        )
+    }
+    from(configurations.compile.collect { entry -> zipTree(entry) }) {
+        exclude "META-INF/MANIFEST.MF"
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+}
