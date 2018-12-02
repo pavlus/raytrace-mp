@@ -1,6 +1,7 @@
 package com.pavlus.raytrace
 
 import com.pavlus.raytrace.model.Camera
+import com.pavlus.raytrace.model.randomizer
 import kotlin.math.min
 
 class Renderer(val camera: Camera, val stage: Hittable, val tracer:Tracer) {
@@ -23,7 +24,7 @@ class Renderer(val camera: Camera, val stage: Hittable, val tracer:Tracer) {
                 verticals.map { (x0, x1) ->
                     Sweep(x0, x1, wStep, y0, y1, hStep)
                 }
-            }.shuffled().forEach {
+            }.shuffled(randomizer).forEach {
                 executor { it.render(tracer, camera, stage, target) }
             }
         executor(allSubmited)
