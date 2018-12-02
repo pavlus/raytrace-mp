@@ -8,6 +8,7 @@ import com.pavlus.raytrace.model.hittable.Stage
 import com.pavlus.raytrace.model.math.*
 import com.pavlus.raytrace.model.texture.CheckerTexture
 import com.pavlus.raytrace.model.texture.ColorTexture
+import com.pavlus.raytrace.model.texture.MarbleTexture
 
 fun simpleStage(): Hittable {
     return BvhNode(
@@ -21,6 +22,20 @@ fun simpleStage(): Hittable {
         0, 0
     )
 }
+
+
+fun noiseStage(): Hittable {
+    val perlin = Perlin()
+    val texture = MarbleTexture(perlin, 1)
+    return BvhNode(
+        listOf(
+            Sphere(Point(0, -1000, 0), 1000, Lambertian(texture)),
+            Sphere(Point(0, 2, 0), 2, Lambertian(texture))
+        ),
+        0, 0
+    )
+}
+
 
 fun generateStaticStage(w: Int = 11, h: Int = 11): Hittable {
     val list = ArrayList<Hittable>()
@@ -117,9 +132,10 @@ fun generateMovingStageWithTexture(w: Int = 10, h: Int = 10): Hittable {
             }
         }
     }
-    add(0, 1, 0, 1, Dielectric(1.5))
-    add(-4, 1, 0, 1, Lambertian(0.4, 0.2, 0.1))
-    add(4, 1, 0, 1, Metal(0.7, 0.6, 0.5, 0.0))
+    add(-4, 1, 0.6, 1, Lambertian(0.4, 0.2, 0.1))
+    add(0, 1, 0.6, 1, Dielectric(1.5))
+    add(4, 1, 0.6, 1, Metal(0.7, 0.6, 0.5, 0.0))
+    add(8, 1, 0.6, 1, Lambertian(MarbleTexture(Perlin(), 100)))
     return Stage(list)
 }
 
