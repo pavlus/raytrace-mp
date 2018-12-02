@@ -6,6 +6,8 @@ import com.pavlus.raytrace.model.hittable.MovingSphere
 import com.pavlus.raytrace.model.hittable.Sphere
 import com.pavlus.raytrace.model.hittable.Stage
 import com.pavlus.raytrace.model.math.*
+import com.pavlus.raytrace.model.texture.CheckerTexture
+import com.pavlus.raytrace.model.texture.ColorTexture
 
 fun simpleStage(): Hittable {
     return BvhNode(
@@ -85,6 +87,42 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
     add(4, 1, 0, 1, Metal(0.7, 0.6, 0.5, 0.0))
     return Stage(list)
 }
+
+
+
+fun generateMovingStageWithTexture(w: Int = 10, h: Int = 10): Hittable {
+    val list = ArrayList<Hittable>()
+    fun add(center: Point, radius: Number, material: Material) {
+        list.add(Sphere(center, radius, material))
+    }
+
+    fun add(x: Number, y: Number, z: Number, radius: Number, material: Material) {
+        list.add(Sphere(Point(x, y, z), radius, material))
+    }
+    add(0, -1000, 0, 1000, Lambertian(CheckerTexture(ColorTexture(0.2, 0.3, 0.1), ColorTexture(0.9,0.9,0.9))))
+    val Q = FV3(4, 0.2, 0)
+    for (a in -w until w) {
+        for (b in -h until h) {
+            val cmat = rnd
+            val center = FV3(a + 0.9 * rnd, 0.2, b + 0.9 * rnd)
+            if ((center - Q).length > 0.9) {
+                if (cmat < 0.8) { //diffuse
+                    val center1 = center + Point(0, 0.5 * rnd, 0)
+                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2, Lambertian(lrnd, lrnd, lrnd)))
+                } else if (cmat < 0.95) {//metal
+                    add(center, 0.2, Metal(mrnd, mrnd, mrnd, mrnd))
+                } else { // glass
+                    add(center, 0.2, Dielectric(1.5))
+                }
+            }
+        }
+    }
+    add(0, 1, 0, 1, Dielectric(1.5))
+    add(-4, 1, 0, 1, Lambertian(0.4, 0.2, 0.1))
+    add(4, 1, 0, 1, Metal(0.7, 0.6, 0.5, 0.0))
+    return Stage(list)
+}
+
 
 
 private val rnd: Double

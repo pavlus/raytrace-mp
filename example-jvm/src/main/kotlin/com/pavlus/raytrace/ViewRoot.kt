@@ -205,7 +205,8 @@ class ViewRoot : View("My View") {
     private fun getStage(): Hittable {
 //        return simpleStage()
 //        return generateStaticStage(w = 11, h = 11)
-        return generateMovingStage(w = 10, h = 10)
+//        return generateMovingStage(w = 10, h = 10)
+        return generateMovingStageWithTexture(w = 10, h = 10)
     }
 
     private fun getCamera(): Camera {

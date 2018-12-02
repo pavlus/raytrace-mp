@@ -2,6 +2,8 @@ package com.pavlus.raytrace.model
 
 import com.pavlus.raytrace.Color
 import com.pavlus.raytrace.model.math.*
+import com.pavlus.raytrace.model.texture.ColorTexture
+import com.pavlus.raytrace.model.texture.Texture
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -9,12 +11,14 @@ interface Material {
     fun scatter(ray: Ray, hit: Hit): Ray?
 }
 
-class Lambertian(val albedo: Color) : Material {
-    constructor(r: Number, g: Number, b: Number) : this(Color(r, g, b))
+class Lambertian(val albedo: Texture) : Material {
+
+    constructor(r: Number, g: Number, b: Number) : this(ColorTexture(r, g, b))
+    constructor(color: Color) : this(ColorTexture(color))
 
     override fun scatter(ray: Ray, hit: Hit): Ray? {
         val target = hit.normal + randomUnitVector()
-        return ray.produce(hit.point, target, albedo)
+        return ray.produce(hit.point, target, albedo.color(0, 0, hit.point))
     }
 
 }
