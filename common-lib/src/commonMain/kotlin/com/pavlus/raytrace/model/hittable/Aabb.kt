@@ -10,8 +10,8 @@ class Aabb(val min: Point, val max: Point) {
     val center = max - min
     fun hit(ray: Ray, minDistance: Number, maxDistance: Number): Boolean {
         for (a in 0..2) {
-            val invDirection = 1.0 / (ray.direction[a])
-            val axisOrigin = ray.origin[a] * a
+            val invDirection = 1.0 / ray.direction[a]
+            val axisOrigin = ray.origin[a]
             val left = (min[a] - axisOrigin) * invDirection
             val right = (max[a] - axisOrigin) * invDirection
             if (max(min(left, right), minDistance.toDouble()) > min(max(left, right), maxDistance.toDouble())) return false
