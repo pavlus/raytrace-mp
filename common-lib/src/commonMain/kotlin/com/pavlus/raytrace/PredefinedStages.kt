@@ -100,7 +100,7 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
     add(0, 1, 0, 1, Dielectric(1.5))
     add(-4, 1, 0, 1, Lambertian(0.4, 0.2, 0.1))
     add(4, 1, 0, 1, Metal(0.7, 0.6, 0.5, 0.0))
-    return Stage(list)
+    return BvhNode(list, 0, 1)
 }
 
 
@@ -135,8 +135,8 @@ fun generateMovingStageWithTexture(w: Int = 10, h: Int = 10): Hittable {
     add(-4, 1, 0.6, 1, Lambertian(0.4, 0.2, 0.1))
     add(0, 1, 0.6, 1, Dielectric(1.5))
     add(4, 1, 0.6, 1, Metal(0.7, 0.6, 0.5, 0.0))
-    add(8, 1, 0.6, 1, Lambertian(MarbleTexture(Perlin(), 100)))
-    return Stage(list)
+    add(8, 1, 0.6, 1, Lambertian(MarbleTexture(Perlin(), 1)))
+    return BvhNode(list, 0.0, 1.0)
 }
 
 
