@@ -13,6 +13,7 @@ import javafx.scene.image.WritableImage
 import tornadofx.*
 import java.io.File
 import java.nio.file.Paths
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.Executors
@@ -102,7 +103,7 @@ class ViewRoot : View("My View") {
             it.graphicsContext2D?.clearRect(0.0, 0.0, it.width, it.height)
         }
     }
-
+    private lateinit var started: LocalDateTime
     private fun doRender() {
         running = true
         startTime = System.currentTimeMillis()
@@ -120,7 +121,6 @@ class ViewRoot : View("My View") {
         val w = current.width.toInt()
         val h = current.height.toInt()
         val aa = aa
-        val recoils = ttl
 
         val img = WritableImage(w, h)
         val screenTarget = PWRenderTarget(w, h, img.pixelWriter)
@@ -134,16 +134,20 @@ class ViewRoot : View("My View") {
             counter.submited()
             es.submit {
                 it.invoke()
-                counter.done()
+                val done = counter.done()
+
+                println("Done $done / ${counter.total}")
             }
         }
 
         val renderer = Renderer(
             camera = getCamera(),
             stage = stage,
-            tracer = ditheredTracer(1.0/current.width, 1.0/current.height, aa)
+            tracer = ditheredTracer(1.0 / current.width, 1.0 / current.height, aa)
         )
 
+        started = LocalDateTime.now()
+        println("Starting renderer at $started")
         renderer.renderTo(
             BroadcastingRenderTarget(listOf(screenTarget, bufferedTarget)),
             parallelism + 2, executor,
@@ -160,12 +164,15 @@ class ViewRoot : View("My View") {
         return {
             var finalizingTask: Runnable? = null
             finalizingTask = Runnable {
-                if (taskCount.left() > 0) {
-                    Thread.sleep(taskCount.left() * 100L)
+                if (taskCount.left > 0) {
+                    Thread.sleep(taskCount.left * 100L)
                     es.submit(finalizingTask)
                     Thread.yield()
                 } else {
                     running = false
+                    val now = LocalDateTime.now()
+                    val duration = Duration.between(started, now)
+                    println("Finished rendering at at $now, in total rendert took $duration")
                     val time = System.currentTimeMillis() - startTime
                     println("Frame took $time ms")
                     screenDrawer.stop()
@@ -206,23 +213,24 @@ class ViewRoot : View("My View") {
 //        return simpleStage()
 //        return generateStaticStage(w = 11, h = 11)
 //        return generateMovingStage(w = 10, h = 10)
-        return generateMovingStageWithTexture(w = 10, h = 10)
+        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
+//        return noiseStage()
     }
 
     private fun getCamera(): Camera {
         val from = FV3(13, 2, 3)
-        val at = FV3(-1, 0, -1)
+        val at = FV3(0, 0, 0)
         return Camera.camera(
             from = from,
             at = at,
             vup = FV3(0, -1, 0),
             vFov = fov,
-            aspect = c!!.width/c!!.height,
+            aspect = c!!.width / c!!.height,
             focusDistance = 10.0,
             aperture = 0.0,
             rayTTL = ttl,
-            t0 = 0.0,
-            t1 = 1.0
+            t0 = 0.45,
+            t1 = 0.6
         )
     }
 
@@ -230,15 +238,16 @@ class ViewRoot : View("My View") {
         private val submited: AtomicInteger = AtomicInteger(0),
         private val done: AtomicInteger = AtomicInteger(0)
     ) {
-        fun submited() {
-            submited.incrementAndGet()
-        }
+        fun submited() = submited.incrementAndGet()
 
-        fun done() {
-            done.incrementAndGet()
-        }
 
-        fun left() = submited.get() - done.get()
+        fun done() = done.incrementAndGet()
+
+
+        val left get() = submited.get() - done.get()
+        val total get() = submited.get()
+
     }
+
 }
 
