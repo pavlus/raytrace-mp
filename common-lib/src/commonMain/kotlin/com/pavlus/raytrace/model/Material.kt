@@ -66,18 +66,20 @@ class Dielectric(val refraction: Double) : Material {
             val niOverNt: Double
             val cosine: Double
             val reflectionProb: Double
-            val check = ray.direction.dot(hit.normal)
-            if (check > 0) {
+            val unitDirection = ray.direction.unit()
+            val vectorCosine = unitDirection.dot(hit.normal)
+
+            if (vectorCosine > 0) {
                 outwardNormal = -hit.normal
                 niOverNt = refraction
-                cosine = refraction * check / ray.direction.unit().length
+                cosine = sqrt(1 - refraction * refraction * (1 - vectorCosine * vectorCosine))
             } else {
                 outwardNormal = hit.normal
                 niOverNt = 1.0 / refraction
-                cosine = -refraction * check / ray.direction.unit().length
+                cosine = -vectorCosine
             }
 
-            refracted = refract(ray.direction, outwardNormal, niOverNt)
+            refracted = refract(unitDirection, outwardNormal, niOverNt)
             val reflected = ray.direction.reflect(hit.normal)
             if (refracted != null) {
                 reflectionProb = schlick(cosine, refraction)
