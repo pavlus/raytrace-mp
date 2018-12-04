@@ -105,7 +105,7 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
 
 
 
-fun generateMovingStageWithTexture(w: Int = 10, h: Int = 10): Hittable {
+fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 until 6): Hittable {
     val list = ArrayList<Hittable>()
     fun add(center: Point, radius: Number, material: Material) {
         list.add(Sphere(center, radius, material))
@@ -116,8 +116,8 @@ fun generateMovingStageWithTexture(w: Int = 10, h: Int = 10): Hittable {
     }
     add(0, -1000, 0, 1000, Lambertian(CheckerTexture(ColorTexture(0.2, 0.3, 0.1), ColorTexture(0.9,0.9,0.9))))
     val Q = FV3(4, 0.2, 0)
-    for (a in -w until w) {
-        for (b in -h until h) {
+    for (a in w) {
+        for (b in h) {
             val cmat = rnd
             val center = FV3(a + 0.9 * rnd, 0.2, b + 0.9 * rnd)
             if ((center - Q).length > 0.9) {
