@@ -1,0 +1,4 @@
+package = platform.OpenGL
+headers = GL/gl.h GL/glu.h
+headerFilter = GL/gl.h GL/glu.h GL/glext.h
+linkerOpts.linux = -L/usr/lib/x86_64-linux-gnu -lGL -lGLU

@@ -1,0 +1,5 @@
+depends = OpenGL posix
+package = platform.GLUT
+headers = GL/glut.h
+headerFilter = GL/*
+linkerOpts.linux = -L/usr/lib/x86_64-linux-gnu -lGLUT
