@@ -27,7 +27,7 @@ class Lambertian(val albedo: Texture) : Material {
 private fun Number.fuzz(vector: FV3) = randomUnitVector() * this + vector
 fun <T> identity(value: T): T = value
 class Metal(val albedo: Color, fuzzFactor: Number) : Material {
-    val fuzz: (FV3) -> FV3 = if (fuzzFactor.toDouble() < 1.toDouble()) fuzzFactor::fuzz else ::identity
+    val fuzz: (FV3) -> FV3 = if (fuzzFactor.toDouble() < 1.toDouble()) { vector: FV3 ->fuzzFactor.fuzz(vector)} else { vec->vec }
 
 
     constructor(r: Number, g: Number, b: Number, fuzz: Number) : this(Color(r, g, b), fuzz)

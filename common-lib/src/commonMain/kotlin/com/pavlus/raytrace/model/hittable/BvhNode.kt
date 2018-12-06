@@ -17,11 +17,8 @@ class BvhNode(
 
     private val bounds: Aabb?
 
-    private val axis: (Point) -> Double = when (randomizer.nextInt(0, 3)) {
-        0 -> Point::x
-        1 -> Point::y
-        else -> Point::z
-    }
+    private val axis: Int = randomizer.nextInt(0, 3)
+
 
     init {
         val left: Hittable
@@ -46,18 +43,18 @@ class BvhNode(
         }
         val lbox = left.boundingBox(time0, time1)
         val rbox = right.boundingBox(time0, time1)
-        checkNotNull(lbox) { "Null bounding box in BvhNode onstructor" }
-        checkNotNull(rbox) { "Null bounding box in BvhNode onstructor" }
+        lbox ?: throw NullPointerException("Null bounding box in BvhNode onstructor")
+        rbox ?: throw NullPointerException("Null bounding box in BvhNode onstructor")
         bounds = Aabb.surrounding(lbox, rbox)
         this.left = left
         this.right = right
     }
 
-    private class HittableComparator(val axis: (Point) -> Double) : Comparator<Hittable> {
+    private class HittableComparator(val axis: Int) : Comparator<Hittable> {
         override fun compare(a: Hittable, b: Hittable): Int {
             val left = a.boundingBox(0, 0)!!
             val right = b.boundingBox(0, 0)!!
-            val diff = axis(left.center) - axis(right.center)
+            val diff = left.center[axis] - right.center[axis]
             val result = when{
                 diff<0.0 -> -1
                 diff>0.0 -> 1
