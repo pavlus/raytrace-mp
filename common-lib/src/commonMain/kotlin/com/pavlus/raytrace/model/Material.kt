@@ -17,8 +17,9 @@ class Lambertian(val albedo: Texture) : Material {
     constructor(color: Color) : this(ColorTexture(color))
 
     override fun scatter(ray: Ray, hit: Hit): Ray? {
+        val (u, v) = hit.uv
         val target = hit.normal + randomUnitVector()
-        return ray.produce(hit.point, target, albedo.color(0, 0, hit.point))
+        return ray.produce(hit.point, target, albedo.color(u, v, hit.point))
     }
 
 }

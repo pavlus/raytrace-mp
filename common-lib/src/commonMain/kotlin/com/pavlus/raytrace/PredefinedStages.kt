@@ -8,7 +8,17 @@ import com.pavlus.raytrace.model.hittable.Stage
 import com.pavlus.raytrace.model.math.*
 import com.pavlus.raytrace.model.texture.CheckerTexture
 import com.pavlus.raytrace.model.texture.ColorTexture
+import com.pavlus.raytrace.model.texture.ImageTexture
 import com.pavlus.raytrace.model.texture.MarbleTexture
+
+
+fun texturedStage(texture: String): Hittable {
+    return Stage(
+        listOf(
+            Sphere(Point(0, 0, 0), 2, Lambertian(ImageTexture(loadTexture(texture))))
+        )
+    )
+}
 
 fun simpleStage(): Hittable {
     return BvhNode(
@@ -104,7 +114,6 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
 }
 
 
-
 fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 until 6): Hittable {
     val list = ArrayList<Hittable>()
     fun add(center: Point, radius: Number, material: Material) {
@@ -114,7 +123,7 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
     fun add(x: Number, y: Number, z: Number, radius: Number, material: Material) {
         list.add(Sphere(Point(x, y, z), radius, material))
     }
-    add(0, -1000, 0, 1000, Lambertian(CheckerTexture(ColorTexture(0.2, 0.3, 0.1), ColorTexture(0.9,0.9,0.9))))
+    add(0, -1000, 0, 1000, Lambertian(CheckerTexture(ColorTexture(0.2, 0.3, 0.1), ColorTexture(0.9, 0.9, 0.9))))
     val Q = FV3(4, 0.2, 0)
     for (a in w) {
         for (b in h) {
@@ -138,7 +147,6 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
     add(8, 1, 0.6, 1, Lambertian(MarbleTexture(Perlin(), 1)))
     return BvhNode(list, 0.0, 1.0)
 }
-
 
 
 private val rnd: Double

@@ -2,7 +2,6 @@ package com.pavlus.raytrace
 
 import com.pavlus.raytrace.model.Camera
 import com.pavlus.raytrace.model.Ray
-import com.pavlus.raytrace.model.hittable.Stage
 import com.pavlus.raytrace.model.math.nextRandom
 import com.pavlus.raytrace.model.math.unit
 

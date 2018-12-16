@@ -17,14 +17,13 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.Executors
-import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.atomic.AtomicInteger
 import javax.imageio.ImageIO
 
 class ViewRoot : View("My View") {
     private var c: Canvas? = null
     val parallelism = Runtime.getRuntime().availableProcessors() + 1
-    private val es = Executors.newWorkStealingPool(parallelism) as ForkJoinPool
+    private val es = Executors.newWorkStealingPool(parallelism)
 
     private val aaProperty = SimpleIntegerProperty(32)
     val aa by aaProperty
@@ -103,6 +102,7 @@ class ViewRoot : View("My View") {
             it.graphicsContext2D?.clearRect(0.0, 0.0, it.width, it.height)
         }
     }
+
     private lateinit var started: LocalDateTime
     private fun doRender() {
         running = true
@@ -213,7 +213,8 @@ class ViewRoot : View("My View") {
 //        return simpleStage()
 //        return generateStaticStage(w = 11, h = 11)
 //        return generateMovingStage(w = 10, h = 10)
-        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
+//        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
+        return texturedStage("/earthmap1k.jpg")
 //        return noiseStage()
     }
 
