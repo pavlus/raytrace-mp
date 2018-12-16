@@ -7,7 +7,7 @@ pluginManagement {
         }
     }
 }
-rootProject.name = 'common-lib'
+rootProject.name = "common-lib"
 
 
-enableFeaturePreview('GRADLE_METADATA')
+enableFeaturePreview("GRADLE_METADATA")
