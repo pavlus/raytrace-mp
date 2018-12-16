@@ -46,6 +46,18 @@ fun noiseStage(): Hittable {
     )
 }
 
+fun lightedStage(): Hittable {
+    val perlin = Perlin()
+    val texture = MarbleTexture(perlin, 1)
+    return Stage(
+        listOf(
+            Sphere(Point(0, -1000, 0), 1000, Lambertian(texture)),
+            Sphere(Point(0, 2, -1), 2, Lambertian(texture)),
+            Sphere(Point(2, 1, 4), 0.5, DiffuseLight(ColorTexture(32, 32, 32)))
+            )
+    )
+}
+
 
 fun generateStaticStage(w: Int = 11, h: Int = 11): Hittable {
     val list = ArrayList<Hittable>()

@@ -9,9 +9,10 @@ import kotlin.random.Random
 
 interface Material {
     fun scatter(ray: Ray, hit: Hit): Ray?
+    fun emmit(u: Double, v: Double, position: FV3): Color? = Color(0, 0, 0)
 }
 
-class Lambertian(val albedo: Texture) : Material {
+open class Lambertian(val albedo: Texture) : Material {
 
     constructor(r: Number, g: Number, b: Number) : this(ColorTexture(r, g, b))
     constructor(color: Color) : this(ColorTexture(color))
@@ -99,6 +100,16 @@ class Dielectric(val refraction: Double) : Material {
 
     }
 
+}
+
+class DiffuseLight(val texture: Texture) : Material {
+    override fun scatter(ray: Ray, hit: Hit): Ray? {
+        return null
+    }
+
+    override fun emmit(u: Double, v: Double, position: FV3): Color? {
+        return texture.color(u, v, position)
+    }
 }
 
 fun randomUnitVector(): FV3 {
