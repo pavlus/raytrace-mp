@@ -6,6 +6,9 @@ import com.pavlus.raytrace.model.math.minus
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Axis-Aligned Bounding Box implementation
+ */
 class Aabb(val min: Point, val max: Point) {
     val center = max - min
     fun hit(ray: Ray, minDistance: Number, maxDistance: Number): Boolean {
@@ -23,16 +26,17 @@ class Aabb(val min: Point, val max: Point) {
         return "Aabb(min=$min, max=$max, center=$center)"
     }
 
-    companion object {
-        fun surrounding(a: Aabb, b: Aabb): Aabb {
-            val (aix, aiy, aiz) = a.min
-            val (aax, aay, aaz) = a.max
-            val (bix, biy, biz) = b.min
-            val (bax, bay, baz) = b.max
-            val min = Point(min(aix, bix), min(aiy, biy), min(aiz, biz))
-            val max = Point(max(aax, bax), max(aay, bay), max(aaz, baz))
-            return Aabb(min, max)
-        }
+    /**
+     * Join boxes into single box
+     */
+    operator fun plus(other:Aabb):Aabb{
+        val (aix, aiy, aiz) = this.min
+        val (aax, aay, aaz) = this.max
+        val (bix, biy, biz) = other.min
+        val (bax, bay, baz) = other.max
+        val min = Point(min(aix, bix), min(aiy, biy), min(aiz, biz))
+        val max = Point(max(aax, bax), max(aay, bay), max(aaz, baz))
+        return Aabb(min, max)
     }
 
 }

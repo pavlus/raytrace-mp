@@ -1,10 +1,11 @@
 package com.pavlus.raytrace
 
-import com.pavlus.raytrace.model.*
+import com.pavlus.raytrace.model.FV3
 import com.pavlus.raytrace.model.hittable.BvhNode
 import com.pavlus.raytrace.model.hittable.MovingSphere
 import com.pavlus.raytrace.model.hittable.Sphere
 import com.pavlus.raytrace.model.hittable.Stage
+import com.pavlus.raytrace.model.material.*
 import com.pavlus.raytrace.model.math.*
 import com.pavlus.raytrace.model.texture.CheckerTexture
 import com.pavlus.raytrace.model.texture.ColorTexture
@@ -110,7 +111,9 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
             if ((center - Q).length > 0.9) {
                 if (cmat < 0.8) { //diffuse
                     val center1 = center + Point(0, 0.5 * rnd, 0)
-                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2, Lambertian(lrnd, lrnd, lrnd)))
+                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2,
+                        Lambertian(lrnd, lrnd, lrnd)
+                    ))
                 } else if (cmat < 0.95) {//metal
                     add(center, 0.2, Metal(mrnd, mrnd, mrnd, mrnd))
                 } else { // glass
@@ -135,7 +138,14 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
     fun add(x: Number, y: Number, z: Number, radius: Number, material: Material) {
         list.add(Sphere(Point(x, y, z), radius, material))
     }
-    add(0, -1000, 0, 1000, Lambertian(CheckerTexture(ColorTexture(0.2, 0.3, 0.1), ColorTexture(0.9, 0.9, 0.9))))
+    add(0, -1000, 0, 1000,
+        Lambertian(
+            CheckerTexture(
+                ColorTexture(0.2, 0.3, 0.1),
+                ColorTexture(0.9, 0.9, 0.9)
+            )
+        )
+    )
     val Q = FV3(4, 0.2, 0)
     for (a in w) {
         for (b in h) {
@@ -144,7 +154,9 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
             if ((center - Q).length > 0.9) {
                 if (cmat < 0.8) { //diffuse
                     val center1 = center + Point(0, 0.5 * rnd, 0)
-                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2, Lambertian(lrnd, lrnd, lrnd)))
+                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2,
+                        Lambertian(lrnd, lrnd, lrnd)
+                    ))
                 } else if (cmat < 0.95) {//metal
                     add(center, 0.2, Metal(mrnd, mrnd, mrnd, mrnd))
                 } else { // glass

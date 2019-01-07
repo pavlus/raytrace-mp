@@ -1,6 +1,7 @@
 package com.pavlus.raytrace.model
 
 import com.pavlus.raytrace.model.math.*
+import com.pavlus.raytrace.randomizer
 import kotlin.math.PI
 import kotlin.math.tan
 
@@ -16,7 +17,7 @@ data class Camera(
 ) {
     private val timespan = t1 - t0
 
-    fun getRay(u: Number, v: Number): Ray {
+    fun ray(u: Number, v: Number): Ray {
         val s = u.toDouble()
         val t = v.toDouble()
         val rd = randomUnitDisk() * lensRadius

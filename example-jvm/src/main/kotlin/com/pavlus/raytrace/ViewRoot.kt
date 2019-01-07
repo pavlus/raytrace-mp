@@ -140,10 +140,13 @@ class ViewRoot : View("My View") {
             }
         }
 
+        val WHITE = Color(1, 1, 1)
         val renderer = Renderer(
             camera = getCamera(),
             stage = stage,
-            tracer = overExposureCompensationTracer(ditheredTracer(1.0 / current.width, 1.0 / current.height, aa))
+            tracer = ExposureCompensationTracer(
+                PathTracer(1.0 / current.width, 1.0 / current.height, aa, { WHITE })
+            )
         )
 
         started = LocalDateTime.now()
@@ -213,9 +216,9 @@ class ViewRoot : View("My View") {
 //        return simpleStage()
 //        return generateStaticStage(w = 11, h = 11)
 //        return generateMovingStage(w = 10, h = 10)
-//        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
+        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
 //        return texturedStage("/earthmap1k.jpg")
-        return lightedStage()
+//        return lightedStage()
 //        return noiseStage()
     }
 

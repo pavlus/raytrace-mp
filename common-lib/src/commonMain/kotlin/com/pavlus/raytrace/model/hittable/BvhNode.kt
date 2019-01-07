@@ -3,7 +3,7 @@ package com.pavlus.raytrace.model.hittable
 import com.pavlus.raytrace.Hittable
 import com.pavlus.raytrace.model.Hit
 import com.pavlus.raytrace.model.Ray
-import com.pavlus.raytrace.model.randomizer
+import com.pavlus.raytrace.randomizer
 
 // fixme this implementation is probably the bug source if you added new primitives
 class BvhNode(
@@ -31,7 +31,6 @@ class BvhNode(
                 right = children.last()
             }
             else -> {
-//                val sorted = children.sortedBy{ it.boundingBox(time0, time1)?.min?.let { corner -> axis(corner) } }
                 val sorted = children.sortedWith(HittableComparator(axis))
                 val halfLen = sorted.size / 2
                 left = BvhNode(sorted.subList(0, halfLen), time0, time1)
@@ -43,7 +42,7 @@ class BvhNode(
         val rbox = right.boundingBox(time0, time1)
         checkNotNull(lbox) { "Null bounding box in BvhNode onstructor" }
         checkNotNull(rbox) { "Null bounding box in BvhNode onstructor" }
-        bounds = Aabb.surrounding(lbox, rbox)
+        bounds = lbox + rbox
         this.left = left
         this.right = right
     }
@@ -53,9 +52,9 @@ class BvhNode(
             val left = a.boundingBox(0, 0)!!
             val right = b.boundingBox(0, 0)!!
             val diff = left.center[axis] - right.center[axis]
-            val result = when{
-                diff<0.0 -> -1
-                diff>0.0 -> 1
+            val result = when {
+                diff < 0.0 -> -1
+                diff > 0.0 -> 1
                 else -> 0
             }
             return result

@@ -1,7 +1,7 @@
 package com.pavlus.raytrace.model.math
 
 import com.pavlus.raytrace.model.FV3
-import com.pavlus.raytrace.model.randomizer
+import com.pavlus.raytrace.randomizer
 
 fun nextRandom(): Double = randomizer.nextDouble()
 

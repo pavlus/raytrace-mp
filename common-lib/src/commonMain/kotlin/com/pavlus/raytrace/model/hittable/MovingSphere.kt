@@ -2,8 +2,8 @@ package com.pavlus.raytrace.model.hittable
 
 import com.pavlus.raytrace.model.FV3
 import com.pavlus.raytrace.model.Hit
-import com.pavlus.raytrace.model.Material
 import com.pavlus.raytrace.model.Ray
+import com.pavlus.raytrace.model.material.Material
 import com.pavlus.raytrace.model.math.*
 import kotlin.math.sqrt
 
@@ -47,6 +47,5 @@ class MovingSphere(
         fun Point.str() = "($x; $y; $z)"
         return "MovingSphere(center=${center.str()}, center1=${center1.str()}, radius=$radius, material=$material, time0=$time0, time1=$time1)"
     }
-
 
 }

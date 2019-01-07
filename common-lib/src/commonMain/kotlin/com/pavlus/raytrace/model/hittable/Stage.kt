@@ -1,6 +1,6 @@
 package com.pavlus.raytrace.model.hittable
 
-import com.pavlus.raytrace.*
+import com.pavlus.raytrace.Hittable
 import com.pavlus.raytrace.model.Hit
 import com.pavlus.raytrace.model.Ray
 
@@ -32,7 +32,7 @@ fun aabb(children: Collection<Hittable>, time0: Number, time1: Number): Aabb? {
         it.boundingBox(time0, time1)
     }.ifEmpty {
         null
-    }?.reduce(Aabb.Companion::surrounding)
+    }?.reduce(Aabb::plus)
 }
 
 

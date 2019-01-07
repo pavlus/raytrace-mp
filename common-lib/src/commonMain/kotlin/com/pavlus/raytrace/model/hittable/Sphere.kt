@@ -4,8 +4,8 @@ import com.pavlus.raytrace.Hittable
 import com.pavlus.raytrace.PI2
 import com.pavlus.raytrace.model.FV3
 import com.pavlus.raytrace.model.Hit
-import com.pavlus.raytrace.model.Material
 import com.pavlus.raytrace.model.Ray
+import com.pavlus.raytrace.model.material.Material
 import com.pavlus.raytrace.model.math.*
 import kotlin.math.PI
 import kotlin.math.asin
@@ -58,7 +58,8 @@ open class Sphere(val center: Point, val radius: Number, val material: Material)
             incadescentVector,
             normal(incadescentVector, center),
             material,
-            uv(incadescentVector)
+            uv(incadescentVector),
+            this
         )
     }
 
@@ -70,7 +71,7 @@ open class Sphere(val center: Point, val radius: Number, val material: Material)
     private fun normal(incadesc: FV3, center: Point): FV3 = (incadesc - center) * invRad
 
     private fun uv(point: FV3): Pair<Double, Double> {
-        val (x,y,z) = point.unit()
+        val (x, y, z) = point.unit()
         val u = 0.5 - atan2(z, x) / PI2
         val v = 0.5 - asin(y) / PI
         return Pair(u, v)
