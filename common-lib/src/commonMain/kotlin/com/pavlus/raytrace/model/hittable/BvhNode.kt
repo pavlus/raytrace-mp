@@ -3,7 +3,6 @@ package com.pavlus.raytrace.model.hittable
 import com.pavlus.raytrace.Hittable
 import com.pavlus.raytrace.model.Hit
 import com.pavlus.raytrace.model.Ray
-import com.pavlus.raytrace.model.math.Point
 import com.pavlus.raytrace.model.randomizer
 
 // fixme this implementation is probably the bug source if you added new primitives
@@ -17,11 +16,7 @@ class BvhNode(
 
     private val bounds: Aabb?
 
-    private val axis: (Point) -> Double = when (randomizer.nextInt(0, 3)) {
-        0 -> Point::x
-        1 -> Point::y
-        else -> Point::z
-    }
+    private val axis: Int = randomizer.nextInt(0, 3)
 
     init {
         val left: Hittable
@@ -53,11 +48,11 @@ class BvhNode(
         this.right = right
     }
 
-    private class HittableComparator(val axis: (Point) -> Double) : Comparator<Hittable> {
+    private class HittableComparator(val axis: Int) : Comparator<Hittable> {
         override fun compare(a: Hittable, b: Hittable): Int {
             val left = a.boundingBox(0, 0)!!
             val right = b.boundingBox(0, 0)!!
-            val diff = axis(left.center) - axis(right.center)
+            val diff = left.center[axis] - right.center[axis]
             val result = when{
                 diff<0.0 -> -1
                 diff>0.0 -> 1
