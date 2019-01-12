@@ -16,10 +16,10 @@ open class Sphere(val center: Point, val radius: Number, val material: Material)
     Hittable {
     protected val invRad = 1.0F / radius.toDouble()
     protected val rSqr = radius.toDouble() * radius.toDouble()
-    protected val bb by lazy {
+    protected val bb = {
         val radiusProjection = FV3(radius, radius, radius)
         Aabb(center - radiusProjection, center + radiusProjection)
-    }
+    }()
 
     override fun boundingBox(time0: Number, time1: Number): Aabb = bb
 

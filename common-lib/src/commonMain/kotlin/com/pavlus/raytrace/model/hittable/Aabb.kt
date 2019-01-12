@@ -2,7 +2,6 @@ package com.pavlus.raytrace.model.hittable
 
 import com.pavlus.raytrace.model.Ray
 import com.pavlus.raytrace.model.math.Point
-import com.pavlus.raytrace.model.math.minus
 import kotlin.math.max
 import kotlin.math.min
 
@@ -10,7 +9,6 @@ import kotlin.math.min
  * Axis-Aligned Bounding Box implementation
  */
 class Aabb(val min: Point, val max: Point) {
-    val center = max - min
     fun hit(ray: Ray, minDistance: Number, maxDistance: Number): Boolean {
         for (a in 0..2) {
             val invDirection = 1.0 / ray.direction[a]
@@ -23,7 +21,7 @@ class Aabb(val min: Point, val max: Point) {
     }
 
     override fun toString(): String {
-        return "Aabb(min=$min, max=$max, center=$center)"
+        return "Aabb(min=$min, max=$max)"
     }
 
     /**

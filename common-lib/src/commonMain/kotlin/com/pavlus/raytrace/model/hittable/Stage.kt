@@ -6,12 +6,12 @@ import com.pavlus.raytrace.model.Ray
 
 class Stage(private val children: Collection<Hittable>) : Hittable {
 
-    override fun getHit(ray: Ray, minDist: Number, maxDist: Number): Hit? {
+    override fun getHit(ray: Ray, minDistance: Number, maxDistance: Number): Hit? {
         var hit: Hit? = null
-        var closest: Double = maxDist.toDouble()
-        val min = minDist.toDouble()
-        children.forEach {
-            it.getHit(ray, min, closest)?.let {
+        var closest: Double = maxDistance.toDouble()
+        val min = minDistance.toDouble()
+        children.forEach { hittable: Hittable ->
+            hittable.getHit(ray, min, closest)?.let {
                 hit = it
                 closest = it.distance
             }

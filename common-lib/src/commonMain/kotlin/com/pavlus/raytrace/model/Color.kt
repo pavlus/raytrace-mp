@@ -12,4 +12,7 @@ inline operator fun Color.times(other: Number): Color {
 }
 
 inline operator fun Color.div(other: Color) = FV3(r / other.r, g / other.g, b / other.b)
-inline operator fun Color.plus(other: Color) = Color(r + other.r, g + other.g, b + other.b)
+inline operator fun Color.div(other: Number): Color {
+    val f = other.toDouble()
+    return Color(r / f, g / f, b / f)
+}inline operator fun Color.plus(other: Color) = Color(r + other.r, g + other.g, b + other.b)

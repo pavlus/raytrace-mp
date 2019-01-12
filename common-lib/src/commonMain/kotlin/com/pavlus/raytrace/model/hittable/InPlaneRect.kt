@@ -44,7 +44,7 @@ sealed class InPlaneRect(
     val bSpan = b1 - b0
     override fun getHit(ray: Ray, minDistance: Number, maxDistance: Number): Hit? {
         val distance = (k - ray.origin[c]) / ray.direction[c]
-        if (minDistance.toDouble() > distance && distance > maxDistance.toDouble())
+        if (distance < minDistance.toDouble() || distance > maxDistance.toDouble())
             return null
 
         val aHit = ray.origin[a] + ray.direction[a] * distance
@@ -54,8 +54,8 @@ sealed class InPlaneRect(
             return null
         }
 
-        val u = (a - a0) / aSpan
-        val v = (b - b0) / bSpan
+        val u = (aHit - a0) / aSpan
+        val v = (bHit - b0) / bSpan
         return Hit(distance, ray.scale(distance), normal, material, Pair(u, v))
 
     }

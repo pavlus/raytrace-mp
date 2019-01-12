@@ -49,9 +49,9 @@ class BvhNode(
 
     private class HittableComparator(val axis: Int) : Comparator<Hittable> {
         override fun compare(a: Hittable, b: Hittable): Int {
-            val left = a.boundingBox(0, 0)!!
-            val right = b.boundingBox(0, 0)!!
-            val diff = left.center[axis] - right.center[axis]
+            val left = a.boundingBox(0, 1)!!
+            val right = b.boundingBox(0, 1)!!
+            val diff = left.min[axis] - right.min[axis]
             val result = when {
                 diff < 0.0 -> -1
                 diff > 0.0 -> 1
