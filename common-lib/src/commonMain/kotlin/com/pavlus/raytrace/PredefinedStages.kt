@@ -181,17 +181,21 @@ fun boxCornell(): Hittable {
     val red = Lambertian(0.65, 0.05, 0.05)
     val white = Lambertian(0.73, 0.73, 0.73)
     val green = Lambertian(0.12, 0.45, 0.15)
+    val blue = Lambertian(0.05, 0.05, 0.85)
+    val yellow = Lambertian(0.65, 0.65, 0.05)
     val light = DiffuseLight(32, 32, 32)
     val sizePlus = 0
-    return Stage(
+    return BvhNode(
         listOf(
-            YZRect(0, 555, 0, 555, 555, green),
-            YZRect(0, 555, 0, 555, 0, red).invertNormal(),
+            YZRect(0, 555, 0, 555, 555, green).invertNormal(),
+            YZRect(0, 555, 0, 555, 0, red),
             XZRect(0, 555, 0, 555, 555, white).invertNormal() /*ceiling*/,
             XZRect(213-sizePlus, 343+sizePlus, 227-sizePlus, 332+sizePlus, 554, light).invertNormal(),
-            XZRect(0, 555, 0, 555, 0, white).invertNormal(), /*floor*/
-            XYRect(0, 555, 0, 555, 555, white) /*back wall*/
-        )
+            XZRect(0, 555, 0, 555, 0, white), /*floor*/
+            XYRect(0, 555, 0, 555, 555, white).invertNormal(), /*back wall*/
+            Box(Point(265,0,295), Point(430,330,460), white),
+            Box(Point(130,0,65), Point(295,165,230), white)
+        ), 0,1
     )
 }
 

@@ -22,7 +22,7 @@ interface Tracer {
         val scattered = hit.material.scatter(ray, hit) ?: return emitted ?: noHit(ray)
         if (ray.ttl < 0) return noHit(ray)
 
-        val attenuated = trace(scattered, stage) * ray.atttenuation
+        val attenuated = trace(scattered, stage) * scattered.atttenuation
         if (emitted == null) return attenuated
         return emitted + attenuated
 
@@ -63,7 +63,9 @@ class ExposureCompensationTracer(val delegate: Tracer) : Tracer by delegate {
         val original = delegate.invoke(camera, u, v, stage, initialHitable)
         val (r, g, b) = original
         val max = max(r, max(g, b))
-        return Color(
+        return if (max > 1.0) {
+            original / max
+        } else Color(
             r.coerceIn(0.0, 1.0),
             g.coerceIn(0.0, 1.0),
             b.coerceIn(0.0, 1.0)
