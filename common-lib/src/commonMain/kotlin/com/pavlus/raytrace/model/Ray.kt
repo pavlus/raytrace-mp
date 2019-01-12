@@ -15,5 +15,5 @@ data class Ray(
     fun produce(origin: FV3, direction: FV3) = Ray(origin, direction, time = time, ttl = ttl - 1)
 
 
-    fun pointTo(directionScale: Number) = origin + direction * directionScale
+    fun scale(directionScale: Number) = origin + direction * directionScale
 }

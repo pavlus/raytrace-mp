@@ -25,16 +25,16 @@ class ViewRoot : View("My View") {
     val parallelism = Runtime.getRuntime().availableProcessors() + 1
     private val es = Executors.newWorkStealingPool(parallelism)
 
-    private val aaProperty = SimpleIntegerProperty(32)
+    private val aaProperty = SimpleIntegerProperty(128)
     val aa by aaProperty
 
     private val ttlProperty = SimpleIntegerProperty(16)
     val ttl by ttlProperty
 
-    private val targetWidthProperty = SimpleIntegerProperty(400)
+    private val targetWidthProperty = SimpleIntegerProperty(256)
     val targetWidth by targetWidthProperty
 
-    private val targetHeightProperty = SimpleIntegerProperty(200)
+    private val targetHeightProperty = SimpleIntegerProperty(256)
     val targetHeight by targetHeightProperty
 
     private val fovProperty = SimpleDoubleProperty(20.0)
@@ -55,11 +55,11 @@ class ViewRoot : View("My View") {
                 fieldset(labelPosition = Orientation.HORIZONTAL) {
                     hbox(8) {
                         field("AA factor: ") {
-                            spinner(1, 4096, aa, 1, true, aaProperty)
+                            spinner(1, 8096, aa, 1, true, aaProperty)
                         }
 
                         field("Ray TTL: ") {
-                            spinner(1, 128, ttl, 1, true, ttlProperty)
+                            spinner(1, 8096, ttl, 1, true, ttlProperty)
                         }
                     }
                 }
@@ -141,11 +141,12 @@ class ViewRoot : View("My View") {
         }
 
         val WHITE = Color(1, 1, 1)
+        val BLACK = Color(0, 0, 0)
         val renderer = Renderer(
             camera = getCamera(),
             stage = stage,
             tracer = ExposureCompensationTracer(
-                PathTracer(1.0 / current.width, 1.0 / current.height, aa, { WHITE })
+                PathTracer(1.0 / current.width, 1.0 / current.height, aa, { BLACK })
             )
         )
 
@@ -216,13 +217,19 @@ class ViewRoot : View("My View") {
 //        return simpleStage()
 //        return generateStaticStage(w = 11, h = 11)
 //        return generateMovingStage(w = 10, h = 10)
-        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
+//        return generateMovingStageWithTexture(w = -20..7, h = 0..5)
 //        return texturedStage("/earthmap1k.jpg")
 //        return lightedStage()
 //        return noiseStage()
+        return boxCornell()
     }
 
     private fun getCamera(): Camera {
+//        return bigStageCamera()
+        return boxCamera()
+    }
+
+    private fun bigStageCamera(): Camera {
         val from = FV3(13, 2, 3)
         val at = FV3(0, 0, 0)
         return Camera.camera(
@@ -236,6 +243,25 @@ class ViewRoot : View("My View") {
             rayTTL = ttl,
             t0 = 0.45,
             t1 = 0.6
+        )
+    }
+
+    private fun boxCamera(): Camera {
+        val from = FV3(278, 278, -800)
+        val at = FV3(278, 278, 0)
+        val focusDistance = 10.0
+        val vFov = 40.0
+        return Camera.camera(
+            from = from,
+            at = at,
+            vup = FV3(0, -1, 0),
+            vFov = vFov,
+            aspect = c!!.width / c!!.height,
+            focusDistance = focusDistance,
+            aperture = 0.0,
+            rayTTL = ttl,
+            t0 = 0.0,
+            t1 = 1.0
         )
     }
 

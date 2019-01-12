@@ -1,10 +1,7 @@
 package com.pavlus.raytrace
 
 import com.pavlus.raytrace.model.FV3
-import com.pavlus.raytrace.model.hittable.BvhNode
-import com.pavlus.raytrace.model.hittable.MovingSphere
-import com.pavlus.raytrace.model.hittable.Sphere
-import com.pavlus.raytrace.model.hittable.Stage
+import com.pavlus.raytrace.model.hittable.*
 import com.pavlus.raytrace.model.material.*
 import com.pavlus.raytrace.model.math.*
 import com.pavlus.raytrace.model.texture.CheckerTexture
@@ -52,10 +49,11 @@ fun lightedStage(): Hittable {
     val texture = MarbleTexture(perlin, 1)
     return Stage(
         listOf(
-            Sphere(Point(0, -1000, 0), 1000, Lambertian(texture)),
-            Sphere(Point(0, 2, -1), 2, Lambertian(texture)),
-            Sphere(Point(2, 1, 4), 0.5, DiffuseLight(ColorTexture(32, 32, 32)))
-            )
+            Sphere(Point(0, -1003, 0), 1000, Lambertian(texture)),
+            Sphere(Point(-2, -1, -1), 2, Lambertian(texture)),
+            Sphere(Point(-2, 4, 0), 2, DiffuseLight(ColorTexture(4, 0, 4))),
+            XYRect(1, 3, -2, 0, -2, DiffuseLight(ColorTexture(0, 4, 0)))
+        )
     )
 }
 
@@ -111,9 +109,12 @@ fun generateMovingStage(w: Int = 10, h: Int = 10): Hittable {
             if ((center - Q).length > 0.9) {
                 if (cmat < 0.8) { //diffuse
                     val center1 = center + Point(0, 0.5 * rnd, 0)
-                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2,
-                        Lambertian(lrnd, lrnd, lrnd)
-                    ))
+                    list.add(
+                        MovingSphere(
+                            center, center1, 0.0, 1.0, 0.2,
+                            Lambertian(lrnd, lrnd, lrnd)
+                        )
+                    )
                 } else if (cmat < 0.95) {//metal
                     add(center, 0.2, Metal(mrnd, mrnd, mrnd, mrnd))
                 } else { // glass
@@ -138,7 +139,8 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
     fun add(x: Number, y: Number, z: Number, radius: Number, material: Material) {
         list.add(Sphere(Point(x, y, z), radius, material))
     }
-    add(0, -1000, 0, 1000,
+    add(
+        0, -1000, 0, 1000,
         Lambertian(
             CheckerTexture(
                 ColorTexture(0.2, 0.3, 0.1),
@@ -154,9 +156,12 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
             if ((center - Q).length > 0.9) {
                 if (cmat < 0.8) { //diffuse
                     val center1 = center + Point(0, 0.5 * rnd, 0)
-                    list.add(MovingSphere(center, center1, 0.0, 1.0, 0.2,
-                        Lambertian(lrnd, lrnd, lrnd)
-                    ))
+                    list.add(
+                        MovingSphere(
+                            center, center1, 0.0, 1.0, 0.2,
+                            Lambertian(lrnd, lrnd, lrnd)
+                        )
+                    )
                 } else if (cmat < 0.95) {//metal
                     add(center, 0.2, Metal(mrnd, mrnd, mrnd, mrnd))
                 } else { // glass
@@ -172,6 +177,23 @@ fun generateMovingStageWithTexture(w: IntRange = -10 until 10, h: IntRange = -6 
     return BvhNode(list, 0.0, 1.0)
 }
 
+fun boxCornell(): Hittable {
+    val red = Lambertian(0.65, 0.05, 0.05)
+    val white = Lambertian(0.73, 0.73, 0.73)
+    val green = Lambertian(0.12, 0.45, 0.15)
+    val light = DiffuseLight(32, 32, 32)
+    val sizePlus = 0
+    return Stage(
+        listOf(
+            YZRect(0, 555, 0, 555, 555, green),
+            YZRect(0, 555, 0, 555, 0, red).invertNormal(),
+            XZRect(0, 555, 0, 555, 555, white).invertNormal() /*ceiling*/,
+            XZRect(213-sizePlus, 343+sizePlus, 227-sizePlus, 332+sizePlus, 554, light).invertNormal(),
+            XZRect(0, 555, 0, 555, 0, white).invertNormal(), /*floor*/
+            XYRect(0, 555, 0, 555, 555, white) /*back wall*/
+        )
+    )
+}
 
 private val rnd: Double
     get() = nextRandom()

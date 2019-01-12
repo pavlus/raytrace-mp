@@ -52,14 +52,13 @@ open class Sphere(val center: Point, val radius: Number, val material: Material)
     }
 
     protected fun hit(ray: Ray, distance: Double, center: Point = this.center): Hit {
-        val incadescentVector = ray.pointTo(distance)
+        val incadescentVector = ray.scale(distance)
         return Hit(
             distance,
             incadescentVector,
             normal(incadescentVector, center),
             material,
-            uv(incadescentVector),
-            this
+            uv(incadescentVector)
         )
     }
 
