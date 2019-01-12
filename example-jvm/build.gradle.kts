@@ -1,7 +1,7 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.3.10"
+    id("org.jetbrains.kotlin.jvm") version "1.3.11"
 }
-apply(plugin = "application")
+apply(mapOf("plugin" to "application"))
 
 group = "com.pavlus.raytrace"
 version = "1.0-SNAPSHOT"
